@@ -1,4 +1,4 @@
-const x = require('http')
+let x = require('http')
 
 console.log('init')
 console.log(x)
