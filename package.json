@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/request-promise": "^4.1.46",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
@@ -17,6 +18,8 @@
     "mongodb": "^3.5.5",
     "mongoose": "^5.9.6",
     "reflect-metadata": "^0.1.13",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.5",
     "typedi": "^0.8.0",
     "winston": "^3.2.1"
   },
