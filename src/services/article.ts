@@ -16,7 +16,6 @@ class ArticleService {
 
   public async getList(): Promise<Array<IArticle | Document>> {
     const articles = await ArticleModel.find({}, '-__v -content')
-    this.getCoverUrlFromBing()
 
     return articles
   }

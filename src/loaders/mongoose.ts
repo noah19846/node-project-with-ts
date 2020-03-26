@@ -7,5 +7,6 @@ export default async (): Promise<Db> => {
     useNewUrlParser: true,
     useUnifiedTopology: true
   })
+
   return connection.connection.db
 }
