@@ -16,6 +16,14 @@ class ArticleService {
 
   public async getList(): Promise<Array<IArticle | Document>> {
     const articles = await ArticleModel.find({}, '-__v -content')
+      .populate({
+        path: 'classifications',
+        select: '-__v -createdAt -updatedAt'
+      })
+      .populate({
+        path: 'tags',
+        select: '-__v -createdAt -updatedAt'
+      })
 
     return articles
   }

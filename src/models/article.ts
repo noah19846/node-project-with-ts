@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-const schema = new mongoose.Schema(
+const schema: any = new mongoose.Schema(
   {
     title: String,
     description: String,
@@ -14,16 +14,28 @@ const schema = new mongoose.Schema(
       type: Number,
       default: 0
     },
-    tags: {
-      type: Array,
-      default: []
-    },
-    classifications: {
-      type: Array,
-      default: []
-    }
+    tags: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Tag'
+      }
+    ],
+    classifications: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Classification'
+      }
+    ]
   },
   { timestamps: true }
 )
+
+schema.options.toJSON = {
+  virtuals: true,
+  transform(doc: any, ret: any) {
+    ret.id = ret._id
+    delete ret._id
+  }
+}
 
 export default mongoose.model('Article', schema)
