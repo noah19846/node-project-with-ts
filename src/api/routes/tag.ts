@@ -1,4 +1,4 @@
-import { Router, Request, Response } from 'express'
+import { Router, Request } from 'express'
 import { tagService } from '../../services'
 
 const route = Router()
@@ -6,27 +6,35 @@ const route = Router()
 export default (app: Router) => {
   app.use('/tag', route)
 
-  route.get('/list', async (req: Request, res: Response) => {
+  route.get('/list', async (req: Request, res: any, next) => {
     const tags = await tagService.getList()
 
-    return res.json(tags).status(200)
+    res.respondData = tags || []
+
+    next()
   })
 
-  route.post('/add', async (req: Request, res: Response) => {
+  route.post('/add', async (req: Request, res: any, next) => {
     const result = await tagService.add(req.body)
 
-    return res.json({ result }).status(200)
+    res.respondData = result
+
+    next()
   })
 
-  route.post('/update', async (req: Request, res: Response) => {
+  route.post('/update', async (req: Request, res: any, next) => {
     const result = await tagService.update(req.body)
 
-    return res.json({ result }).status(200)
+    res.respondData = result
+
+    next()
   })
 
-  route.post('/delete', async (req: Request, res: Response) => {
+  route.post('/delete', async (req: Request, res: any, next) => {
     const result = await tagService.delete(req.body.id)
 
-    return res.json({ result }).status(200)
+    res.respondData = result
+
+    next()
   })
 }

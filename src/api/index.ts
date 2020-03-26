@@ -2,6 +2,7 @@ import { Router } from 'express'
 import article from './routes/article'
 import tag from './routes/tag'
 import classification from './routes/classification'
+import wrapRes from './middlewares/wrap-res'
 
 // guaranteed to get dependencies
 export default () => {
@@ -10,6 +11,8 @@ export default () => {
   article(app)
   tag(app)
   classification(app)
+
+  app.use(wrapRes)
 
   return app
 }

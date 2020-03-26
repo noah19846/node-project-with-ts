@@ -1,4 +1,4 @@
-import { Router, Request, Response } from 'express'
+import { Router, Request } from 'express'
 import { articleService } from '../../services'
 
 const route = Router()
@@ -6,27 +6,35 @@ const route = Router()
 export default (app: Router) => {
   app.use('/article', route)
 
-  route.get('/list', async (req: Request, res: Response) => {
+  route.get('/list', async (req: Request, res: any, next) => {
     const articles = await articleService.getList()
 
-    return res.json(articles).status(200)
+    res.respondData = articles || []
+
+    next()
   })
 
-  route.post('/add', async (req: Request, res: Response) => {
+  route.post('/add', async (req: Request, res: any, next) => {
     const result = await articleService.add(req.body)
 
-    return res.json({ result }).status(200)
+    res.respondData = result
+
+    next()
   })
 
-  route.post('/update', async (req: Request, res: Response) => {
+  route.post('/update', async (req: Request, res: any, next) => {
     const result = await articleService.update(req.body)
 
-    return res.json({ result }).status(200)
+    res.respondData = result
+
+    next()
   })
 
-  route.post('/delete', async (req: Request, res: Response) => {
+  route.post('/delete', async (req: Request, res: any, next) => {
     const result = await articleService.delete(req.body.id)
 
-    return res.json({ result }).status(200)
+    res.respondData = result
+
+    next()
   })
 }

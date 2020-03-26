@@ -1,4 +1,4 @@
-import { Router, Request, Response } from 'express'
+import { Router, Request } from 'express'
 import { classificationService } from '../../services'
 
 const route = Router()
@@ -6,27 +6,35 @@ const route = Router()
 export default (app: Router) => {
   app.use('/classification', route)
 
-  route.get('/list', async (req: Request, res: Response) => {
-    const tags = await classificationService.getList()
+  route.get('/list', async (req: Request, res: any, next) => {
+    const result = await classificationService.getList()
 
-    return res.json(tags).status(200)
+    res.respondData = result || []
+
+    next()
   })
 
-  route.post('/add', async (req: Request, res: Response) => {
+  route.post('/add', async (req: Request, res: any, next) => {
     const result = await classificationService.add(req.body)
 
-    return res.json({ result }).status(200)
+    res.respondData = result
+
+    next()
   })
 
-  route.post('/update', async (req: Request, res: Response) => {
+  route.post('/update', async (req: Request, res: any, next) => {
     const result = await classificationService.update(req.body)
 
-    return res.json({ result }).status(200)
+    res.respondData = result
+
+    next()
   })
 
-  route.post('/delete', async (req: Request, res: Response) => {
+  route.post('/delete', async (req: Request, res: any, next) => {
     const result = await classificationService.delete(req.body.id)
 
-    return res.json({ result }).status(200)
+    res.respondData = result
+
+    next()
   })
 }
