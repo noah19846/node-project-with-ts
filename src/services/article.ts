@@ -1,7 +1,6 @@
 import rp from 'request-promise'
-import { IArticleInputDTO, IArticle } from '../interfaces/article'
+import { IArticleInputDTO } from '../interfaces/article'
 import { ArticleModel } from '../models'
-import { Document } from 'mongoose'
 class ArticleService {
   private async getCoverUrlFromBing(): Promise<string | null> {
     const res = await rp('http://bing.getlove.cn/latelyBingImageStory')
@@ -14,7 +13,8 @@ class ArticleService {
     return null
   }
 
-  public async getList(): Promise<Array<IArticle | Document>> {
+  public async getList(options: any): Promise<{}> {
+    const { page, size } = options
     const articles = await ArticleModel.find({}, '-__v -content')
       .populate({
         path: 'classifications',
@@ -24,8 +24,34 @@ class ArticleService {
         path: 'tags',
         select: '-__v -createdAt -updatedAt'
       })
+      .skip((page - 1) * size)
+      .limit(size)
+      .sort({
+        createdAt: -1
+      })
+    const total = await ArticleModel.countDocuments()
 
-    return articles
+    return { list: articles, total }
+  }
+
+  public async getDetail(id: string): Promise<{}> {
+    const article = await ArticleModel.findById(id, '-__v -content')
+      .populate({
+        path: 'classifications',
+        select: '-__v -createdAt -updatedAt'
+      })
+      .populate({
+        path: 'tags',
+        select: '-__v -createdAt -updatedAt'
+      })
+    const prev = await ArticleModel.find({ _id: { $lt: id } }, { title: 1 })
+      .sort({ _id: -1 })
+      .limit(1)
+    const next = await ArticleModel.find({ _id: { $gt: id } }, { title: 1 })
+      .sort({ _id: 1 })
+      .limit(1)
+
+    return { detail: article, prev: prev[0] || null, next: next[0] || null }
   }
 
   public async add(articleInputDTO: IArticleInputDTO): Promise<{}> {

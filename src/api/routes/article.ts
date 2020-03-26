@@ -7,9 +7,23 @@ export default (app: Router) => {
   app.use('/article', route)
 
   route.get('/list', async (req: Request, res: any, next) => {
-    const articles = await articleService.getList()
+    let { size = 20, page = 1 } = req.query
+
+    size = Number(size)
+    page = Number(page)
+
+    const articles = await articleService.getList({ page, size })
 
     res.respondData = articles || []
+
+    next()
+  })
+
+  route.get('/:id', async (req: Request, res: any, next) => {
+    const { id } = req.params
+    const result = await articleService.getDetail(id)
+
+    res.respondData = result
 
     next()
   })
