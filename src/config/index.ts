@@ -13,7 +13,7 @@ if (!envFound) {
 export default {
   port: parseInt(process.env.PORT as string, 10),
   databaseURL: process.env.MONGODB_URI as string,
-  jwtSecret: process.env.JWT_SECRET,
+  jwtSecret: process.env.JWT_SECRET as string,
   logs: {
     level: process.env.LOG_LEVEL || 'silly'
   },
